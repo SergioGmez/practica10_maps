@@ -207,8 +207,8 @@ function shopPopulate(shop, erp){
         var divCol = document.createElement("div");
         divCol.setAttribute("class", "col-sm-4 col-lg-4 col-md-4");
         divCol.setAttribute("style", "position:fixed; bottom:0; right:0;");
+        divCol.setAttribute("ondrop", paperbin(event));
         
-
         var img = document.createElement("img");
         img.setAttribute("src", "imagenes/papelera.png");
         img.setAttribute("style", "width: 20%; max-width: 100%;");
@@ -361,9 +361,7 @@ function productsCategoryShopPopulate(erp, shop, category){
 
         for(i=0; i<productsCategory.length; i++){
             productShopPopulate(divSct1, productsCategory[i]);
-        }
-        
-        
+        } 
     }
 }
 
@@ -374,7 +372,8 @@ function productShopPopulate(element, product){
 
         var divThumb = document.createElement("div");
         divThumb.setAttribute("class", "thumbnail");
-        divThumb.setAttribute("draggable", "true");
+        divCol.setAttribute("draggable", "true");
+        divCol.setAttribute("ondragstar", dragstart(event));
 
         var img = document.createElement("img");
         img.setAttribute("src", product.product.images[0]);
@@ -403,7 +402,7 @@ function productShopPopulate(element, product){
         var a = document.createElement("a");
         a.appendChild(document.createTextNode("Ver info general"));
         a.setAttribute("class", "pull-right");
-        a.addEventListener("click", openWindows(product.product))
+        a.addEventListener("click", openWindows(product.product));
         divCap.appendChild(a);
 
         p = document.createElement("p");
@@ -535,6 +534,27 @@ function initMap(){
         shop = shops.next();
     }
 }
+
+function paperbin(event){
+  return function(){
+     event.preventDefault();
+     var data =event.dataTransfer.getData("text");
+     event.target.appendChild(document.getElementById(data));
+     console.log("a"); 
+  } 
+    
+}
+
+function dragstart(event){
+    return function(){
+        console.log("a");
+     event.dataTransfer.setData("text", event.target.id);
+        console.log("a");
+  } 
+        
+
+}
+
 
  var listWindows = [];
  var sh = new StoreHouse();

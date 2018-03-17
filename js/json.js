@@ -1,4 +1,12 @@
 function saveObjects (){
+     function sendJson(json, user){
+          var xmlhttp = new XMLHttpRequest();
+                
+          xmlhttp.open("POST", "demo_json.php", true);
+          xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+          xmlhttp.send("x=" + json + "&user="+user);
+     }
+    
    return function (){
        
            var objects = {
@@ -54,8 +62,7 @@ function saveObjects (){
 
            var user = /[^=][a-z]*$/.exec(document.cookie);
            var json = JSON.stringify(objects);
-
-           $.post( "demo_json.php", { json: json, user: user[0] } );
+            
+           sendJson(json, user);
       }
-   
 }
