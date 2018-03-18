@@ -204,19 +204,23 @@ function shopPopulate(shop, erp){
            productShopPopulate(divSct1, shop.products[i]); 
         }
         
-        var divCol = document.createElement("div");
-        divCol.setAttribute("class", "col-sm-4 col-lg-4 col-md-4");
-        divCol.setAttribute("style", "position:fixed; bottom:0; right:0;");
-        divCol.setAttribute("ondrop", paperbin(event));
-        
-        var img = document.createElement("img");
-        img.setAttribute("src", "imagenes/papelera.png");
-        img.setAttribute("style", "width: 20%; max-width: 100%;");
-        img.setAttribute("class", "pull-right");
-        divCol.appendChild(img);
-        divSct1.appendChild(divCol);
-        
-        menuCategoryShopPopulate(shop, erp);
+        if (document.cookie){
+           var divCol = document.createElement("div");
+            divCol.setAttribute("class", "col-sm-4 col-lg-4 col-md-4");
+            divCol.setAttribute("style", "position:fixed; bottom:0; right:0;");
+
+            divCol.ondrop = paperbin(event, shop);
+            divCol.ondragover = allowDrop(event);
+
+            var img = document.createElement("img");
+            img.setAttribute("src", "imagenes/papelera.png");
+            img.setAttribute("style", "width: 20%; max-width: 100%;");
+            img.setAttribute("class", "pull-right");
+            divCol.appendChild(img);
+            divSct1.appendChild(divCol);
+
+            menuCategoryShopPopulate(shop, erp); 
+        }
    }
 }
 
@@ -371,9 +375,11 @@ function productShopPopulate(element, product){
         divCol.setAttribute("class", "col-sm-4 col-lg-4 col-md-4");
 
         var divThumb = document.createElement("div");
+        divThumb.setAttribute("id", product.serialNumber);
         divThumb.setAttribute("class", "thumbnail");
-        divCol.setAttribute("draggable", "true");
-        divCol.setAttribute("ondragstar", dragstart(event));
+        divThumb.setAttribute("draggable", "true");
+        divThumb.ondragstart = dragstart(event);
+        divThumb.ondragover = allowDrop(event);
 
         var img = document.createElement("img");
         img.setAttribute("src", product.product.images[0]);
@@ -501,7 +507,7 @@ function initMap(){
 
     var map = new google.maps.Map(document.getElementById('map'), {
           center: {lat: -34.397, lng: 150.644},
-          zoom: 8
+          zoom: 14
     });
     
     var infoWindow = new google.maps.InfoWindow({map: map});
@@ -535,24 +541,27 @@ function initMap(){
     }
 }
 
-function paperbin(event){
-  return function(){
-     event.preventDefault();
-     var data =event.dataTransfer.getData("text");
-     event.target.appendChild(document.getElementById(data));
-     console.log("a"); 
+function paperbin(event, shop){
+  return function(event){
+      event.preventDefault();
+      var data = event.dataTransfer.getData("text");
+      var pro = new Product(parseInt(data), "a", 1)
+      sh.removeProduct(pro);
+      document.getElementById(data).remove();
   } 
-    
 }
 
-function dragstart(event){
-    return function(){
-        console.log("a");
-     event.dataTransfer.setData("text", event.target.id);
-        console.log("a");
-  } 
-        
 
+function dragstart(event){
+    return function(event){
+        event.dataTransfer.setData("text", event.target.id);
+  }      
+}
+
+function allowDrop(event){
+    return function(event){
+       event.preventDefault();
+  }      
 }
 
 

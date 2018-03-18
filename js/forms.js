@@ -349,8 +349,6 @@ function addShopForm(){
                         if (cif == "" || name == ""){
                              throw new EmptyValueException();
                         } else {
-                             console.log(lat);
-                             console.log(lng);
                              var coord = new Coords(lat, lng);
                              var shop = new Shop(cif, name, coord);
                              sh.addShop(shop);
@@ -535,7 +533,6 @@ function delShopForm(){
                         }
 
                         if (aux !== -1){
-                            console.log(aux);
                             sh.removeShop(aux);
                             
                             init = initPopulate(sh);
@@ -797,8 +794,8 @@ function closeSesion(){
 
 function mapForm(element){
     var mapForm = new google.maps.Map(element, {
-          center: {lat: -34.397, lng: 150.644},
-          zoom: 8
+             center: {lat: 38.984573, lng: -3.927454},
+          zoom: 14
     });
 
     var infoWindow = new google.maps.InfoWindow({map: mapForm});
@@ -811,35 +808,35 @@ function mapForm(element){
             };
 
             mapForm.setCenter(pos);
-              
-            var marker = new google.maps.Marker({
-                position: {lat: pos.lat, lng: pos.lng},
-                map: mapForm,
-                draggable: true,
-                animation: google.maps.Animation.DROP,
-                title: "Ubicacion de la tienda"
-            }); 
-              
-            marker.addListener("click", function() {
-                if (marker.getAnimation() !== null) {
-                  marker.setAnimation(null);
-                } else {
-                  marker.setAnimation(google.maps.Animation.BOUNCE);
-                }
-            });
-            
-              google.maps.event.addListener(marker, "position_changed", function() {
-
-                    lat = marker.getPosition().lat();
-                    lng = marker.getPosition().lng();
-               });
-              
+ 
           }, function() {
             handleLocationError(true, infoWindow, mapForm.getCenter());
           });
      } else {
           handleLocationError(false, infoWindow, mapForm.getCenter());
      }
+    
+    var marker = new google.maps.Marker({
+                position: {lat: 38.984573, lng: -3.927454},
+                map: mapForm,
+                draggable: true,
+                animation: google.maps.Animation.DROP,
+                title: "Ubicacion de la tienda"
+    }); 
+              
+    marker.addListener("click", function() {
+                if (marker.getAnimation() !== null) {
+                  marker.setAnimation(null);
+                } else {
+                  marker.setAnimation(google.maps.Animation.BOUNCE);
+                }
+   });
+            
+   google.maps.event.addListener(marker, "position_changed", function() {
+
+         lat = marker.getPosition().lat();
+         lng = marker.getPosition().lng();
+   });
 }
 
 var lat;
